@@ -3,13 +3,28 @@ var app = {
   server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
   init: function(){
     $('.username').on(app.handleUsernameClick);
-    $('#update-btn').click(this.handleSubmit)
-    $('.submit').submit(app.handleSubmit());
+    $('#update-btn').click(this.handleRefresh);
+    $('.sendMessage').click(this.handleSubmit);
+    $('.updateRoom').click(this.handleRoomSwitch);
+  },
+  handleRefresh: function() {
+    app.fetch();
   },
   handleUsernameClick: function() {
   },
   handleSubmit: function() {
-   console.log('clicked submit button')
+    let endOfUrl = window.location.search.split('=')
+    let message = {
+          username: endOfUrl[1],
+          text: $('#message').val(),
+          roomname: $('#roomSelect').val(),
+        };
+    app.send(message);
+    app.fetch();
+  
+  },
+  handleRoomSwitch: function() {
+    app.renderRoom($('#newRoom').val())
   },
   send: function(message) {
     $.ajax({
@@ -38,9 +53,26 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         
-        console.log(data);
         console.log('chatterbox: Message sent');
-        app.renderMessage(data.results[0]);
+
+        let roomArray = [];
+       
+        if ($('#roomSelect').val() === '1') {
+           app.clearMessages();
+           data.results.forEach(function(el) {
+             app.renderMessage(el);
+           });
+        } else {
+            app.clearMessages();
+            data.results.forEach(function(el) {
+              if (el.roomname === $('#roomSelect').val()){
+                roomArray.push(el);
+              }    
+            });
+            roomArray.forEach(function(el) {
+             app.renderMessage(el);  
+            });
+        } 
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -57,7 +89,8 @@ var app = {
     
   },
   renderRoom: function(roomName) {
-    $('#roomSelect').append('<option value = "option1">'+roomName+'</option>')
+    let nextRoomNumber = Number($( "option" ).last().val())+1;
+    $('option').last().after('<option value ='+nextRoomNumber+'>'+roomName+'</option>')
   }
 }
 

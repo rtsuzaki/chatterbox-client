@@ -17,6 +17,7 @@
         }
         newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
         window.location.search = newSearch;
+        console.log(window.location.search)
       }
     </script>
     <!-- your scripts -->
@@ -28,20 +29,30 @@
     <div id="rooms">
       Room:
       <select id="roomSelect">
+        <option value="1">Default</option>
       </select>
     </div> 
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-      <button id='update-btn'> Test </button>
-      <form action="#" id="send" method="post">
+      <button id='update-btn'> Refresh </button>
+      <input type="text" name="roomText" id="newRoom"/>
+        <button class="updateRoom">Create New Room</button> 
+
+      <form action="#" id="send" method="POST">
         <input type="text" name="message" id="message"/>
-        <input type="submit" name="submit" class="submit"/>
       </form>
+         <button class="sendMessage">Send Message</button> 
     </div>
     <div id="chats"></div>
   </body>
   <script>
-  app.init()
+  $( document ).ready(function() {
+    app.init();
+    app.fetch();
+    window.setInterval(app.fetch, 5000);
+
+
+  });
   </script>
 </html>
