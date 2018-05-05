@@ -1,29 +1,19 @@
-// YOUR CODE HERE:
-let app = {
+
+
+var app = {
 
   server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
-  init: function() {
-    $(".username").click(function(){
-      
-        app.handleUsernameClick.called = true;
-        app.handleUsernameClick.restore = function() {
-          app.handleUsernameClick.called = false;
-        };
-      })
-
-  $(".submit").submit(function(){
-      
-        app.handleSubmit.calledOnce = true;
-        // app.handleSubmit.restore = function() {
-        //   app.handleSubmit.called = false;
-        // };
-      })
-
-
+  init: function(){
+    $('.username').on(app.handleUsernameClick);
+    $('#update-btn').click(this.handleSubmit)
+    $('.submit').submit(app.handleSubmit());
+   
+    // $('button').on('click', console.log('test on click'))
   },
   handleUsernameClick: function() {
   },
   handleSubmit: function() {
+   console.log('clicked submit button')
   },
   send: function(message) {
     $.ajax({
@@ -46,10 +36,15 @@ let app = {
       // This is the url you should use to communicate with the parse API server.
       url: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
       type: 'GET',
-      data: JSON.stringify(message),
+      data: {
+        limit: 5,
+        order:'-createdAt'},
       contentType: 'application/json',
       success: function (data) {
+        
+        console.log(data);
         console.log('chatterbox: Message sent');
+        return data;
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
