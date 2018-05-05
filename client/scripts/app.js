@@ -1,5 +1,3 @@
-
-
 var app = {
 
   server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
@@ -7,8 +5,6 @@ var app = {
     $('.username').on(app.handleUsernameClick);
     $('#update-btn').click(this.handleSubmit)
     $('.submit').submit(app.handleSubmit());
-   
-    // $('button').on('click', console.log('test on click'))
   },
   handleUsernameClick: function() {
   },
@@ -44,7 +40,7 @@ var app = {
         
         console.log(data);
         console.log('chatterbox: Message sent');
-        return data;
+        app.renderMessage(data.results[0]);
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -56,8 +52,9 @@ var app = {
     $('#chats').empty();
   },
   renderMessage: function(message) {
-    $('#chats').before('<div class="username">'+message.username+'</div>');
-    $('#chats').append('<div>'+message.text+'</div>');
+    $('#chats').append('<div class="username">'+message.username+' : '+message.text+'</div>');
+    // $('.username').prepend('<div>'+message.username+'</div>');
+    
   },
   renderRoom: function(roomName) {
     $('#roomSelect').append('<option value = "option1">'+roomName+'</option>')
